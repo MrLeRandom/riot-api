@@ -2705,7 +2705,31 @@ class LeagueAPI
 			return new Objects\SummonerDto($result, $this);
 		});
 	}
+	/**
+	 *   Get summoner name for a given puuid.
+	 *
+	 * @param string $encryptedPUUID
+	 *
+	 * @return Objects\SummonerDto
+	 *
+	 * @throws SettingsException
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 * @throws GeneralException
+	 *
+	 * @link https://developer.riotgames.com/api-methods/#summoner-v4/GET_getByPUUID
+	 */
+	public function getSummonerByPuuid( string $encryptedPUUID )
+	{
+		$resultPromise = $this->setEndpoint("/lol/summoner/" . self::RESOURCE_SUMMONER_VERSION . "/summoners/by-puuid/{$encryptedPUUID}")
+			->setResource(self::RESOURCE_SUMMONER, "/by-puuid/%s")
+			->makeCall();
 
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\SummonerDto($result, $this);
+		});
+	}
 	/**
 	 *   Get single summoner object for a given summoner's account ID.
 	 *
